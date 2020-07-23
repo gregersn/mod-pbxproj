@@ -27,7 +27,7 @@ class FileOptions:
     Wrapper class for all file parameters required at the moment of adding a file to the project.
     """
     def __init__(self, create_build_files=True, weak=False, ignore_unknown_type=False, embed_framework=True,
-                 code_sign_on_copy=True, header_scope=HeaderScope.PROJECT):
+                 code_sign_on_copy=True, header_scope=HeaderScope.PROJECT, name=None):
         """
         Creates an object specifying options to be considered during the file creation into the project.
 
@@ -45,6 +45,7 @@ class FileOptions:
         self.embed_framework = embed_framework
         self.code_sign_on_copy = code_sign_on_copy
         self.header_scope = header_scope
+        self.name = name
 
     def get_attributes(self, file_ref, build_phase):
         if file_ref.get_file_type() != 'wrapper.framework' and file_ref.get_file_type() != 'sourcecode.c.h':
@@ -431,6 +432,9 @@ class ProjectFiles:
 
         # set the file type on the file ref add the files
         file_ref.set_last_known_file_type(file_type)
+        if file_options.name is not None:
+            file_ref['name'] = file_options.name
+
         self.objects[file_ref.get_id()] = file_ref
 
         # determine the parent and add it to it
